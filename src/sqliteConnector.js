@@ -1,8 +1,8 @@
 import sqlite3 from 'sqlite3';
 
-function startDb() {
+function startDb(path) {
   return new Promise((resolve, reject) => {
-    let db = new sqlite3.Database('/Users/Ashrene_Roy/Documents/chrome-history-tree/History', sqlite3.OPEN_READONLY, (err) => {
+    let db = new sqlite3.Database(path, sqlite3.OPEN_READONLY, (err) => {
       if (err) {
         reject(err.message);
       }

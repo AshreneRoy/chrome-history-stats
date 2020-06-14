@@ -1,12 +1,12 @@
-import { TreeNode } from './tree.js';
 import { startDb, end, getVisitData } from './sqliteConnector.js';
 import { massageData } from './massageData.js';
+import { copyHistory } from './copyHistory.js';
 import treeify from 'treeify';
 
 export async function main() {
-  // assuming an array of objects of type:
-  // [{id:1,url:123,from_visit:345},{},{}...]
-  let db = await startDb();
+
+  let path = await copyHistory();
+  let db = await startDb(path);
   let allVisits = await getVisitData(db);
   await end(db);
   let uniqueVisits = {};
