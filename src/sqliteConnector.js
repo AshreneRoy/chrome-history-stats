@@ -6,7 +6,6 @@ function startDb() {
       if (err) {
         reject(err.message);
       }
-      console.log('Connection opened');
       resolve(db);
     });
   });
@@ -25,7 +24,7 @@ function end(db) {
 
 function getVisitData(db) {
   return new Promise((resolve, reject) => {
-    db.all(`select id,url,from_visit from visits`, (err, rows) => {
+    db.all(`select visits.id,urls.url,visits.from_visit from visits inner join urls on visits.url = urls.id`, (err, rows) => {
       if (err) {
         reject(err.message);
       }

@@ -1,6 +1,7 @@
 import { TreeNode } from './tree.js';
 import { startDb, end, getVisitData } from './sqliteConnector.js';
 import { massageData } from './massageData.js';
+import treeify from 'treeify';
 
 export async function main() {
   // assuming an array of objects of type:
@@ -14,17 +15,23 @@ export async function main() {
     let element = massageData(ele);
     let node;
     if(uniqueVisits[element.id] == null) {
-      node = new TreeNode(element.id);
+      node = {
+        [element.id]: [],
+        [element.url]: ''
+      }
       uniqueVisits[element.id] = node;
     }
     if(uniqueVisits[element.fromVisit] == null) {
-      node = new TreeNode(element.fromVisit);
+      node = {
+        [element.fromVisit]: [],
+        [element.url]: ''
+      }
       uniqueVisits[element.fromVisit] = node;
     }
-    uniqueVisits[element.fromVisit].descendants.push(uniqueVisits[element.id]);
+    uniqueVisits[element.fromVisit][element.fromVisit].push(uniqueVisits[element.id]);
     
   });
-  return uniqueVisits;
+  return treeify.asTree(uniqueVisits[0]);
 }
 
 console.log(main().then(console.log));
