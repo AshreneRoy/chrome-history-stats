@@ -33,5 +33,4 @@ export async function main() {
   });
   return treeify.asTree(uniqueVisits[0]);
 }
-
-console.log(main().then(console.log));
+main().then(console.log);
