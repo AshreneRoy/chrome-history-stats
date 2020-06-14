@@ -1,3 +1,9 @@
-import { getVisitData } from './sqliteConnector.js';
+function massageData(row) {
+  return {
+    id: row.id,
+    url: row.url,
+    fromVisit: row.from_visit
+  }
+}
 
-console.log(getVisitData());
+export { massageData };

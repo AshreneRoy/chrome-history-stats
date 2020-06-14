@@ -1,13 +1,17 @@
 import { TreeNode } from './tree.js';
-import { sampleAllVisits } from './sampleAllVisits.js';
+import { startDb, end, getVisitData } from './sqliteConnector.js';
+import { massageData } from './massageData.js';
 
-export function main() {
+export async function main() {
   // assuming an array of objects of type:
   // [{id:1,url:123,from_visit:345},{},{}...]
-  let allVisits = sampleAllVisits;
+  let db = await startDb();
+  let allVisits = await getVisitData(db);
+  await end(db);
   let uniqueVisits = {};
 
-  allVisits.forEach(element => {
+  allVisits.forEach(ele => {
+    let element = massageData(ele);
     let node;
     if(uniqueVisits[element.id] == null) {
       node = new TreeNode(element.id);
@@ -23,4 +27,4 @@ export function main() {
   return uniqueVisits;
 }
 
-console.log(main());
+console.log(main().then(console.log));
