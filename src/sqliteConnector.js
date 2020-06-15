@@ -24,7 +24,18 @@ function end(db) {
 
 function getVisitData(db) {
   return new Promise((resolve, reject) => {
-    db.all(`select visits.id,urls.url,visits.from_visit,visit_time, visit_duration, visit_count from visits inner join urls on visits.url = urls.id`, (err, rows) => {
+    db.all(`select visits.id,urls.url,visits.from_visit,visit_time, visit_duration, visit_count from visits inner join urls on visits.url = urls.id;`, (err, rows) => {
+      if (err) {
+        reject(err.message);
+      }
+      resolve(rows);
+    });
+  });
+}
+
+function getUrlData(db) {
+  return new Promise((resolve, reject) => {
+    db.all(`select url, visit_count from urls order by visit_count desc;`, (err, rows) => {
       if (err) {
         reject(err.message);
       }
@@ -35,7 +46,7 @@ function getVisitData(db) {
 
 function getDownloadsData(db) {
   return new Promise((resolve, reject) => {
-    db.all(`select current_path, total_bytes, tab_url from downloads order by total_bytes desc`, (err, rows) => {
+    db.all(`select current_path, total_bytes, tab_url from downloads order by total_bytes desc;`, (err, rows) => {
       if (err) {
         reject(err.message);
       }
@@ -45,7 +56,7 @@ function getDownloadsData(db) {
 }
 function getKeywordsData(db) {
   return new Promise((resolve, reject) => {
-    db.all(`select * from keyword_search_terms`, (err, rows) => {
+    db.all(`select * from keyword_search_terms inner join urls on keyword_search_terms.url_id = urls.id;`, (err, rows) => {
       if (err) {
         reject(err.message);
       }
@@ -55,4 +66,4 @@ function getKeywordsData(db) {
 }
 
 
-export { startDb, end, getVisitData, getDownloadsData, getKeywordsData };
+export { startDb, end, getVisitData, getDownloadsData, getKeywordsData, getUrlData };
