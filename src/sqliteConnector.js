@@ -35,7 +35,7 @@ function getVisitData(db) {
 
 function getDownloadsData(db) {
   return new Promise((resolve, reject) => {
-    db.all(`select current_path, total_bytes, tab_url from downloads`, (err, rows) => {
+    db.all(`select current_path, total_bytes, tab_url from downloads order by total_bytes desc`, (err, rows) => {
       if (err) {
         reject(err.message);
       }
@@ -43,9 +43,9 @@ function getDownloadsData(db) {
     });
   });
 }
-function getStatsData(db) {
+function getKeywordsData(db) {
   return new Promise((resolve, reject) => {
-    db.all(`select * from keyword_search_terms inner join urls on keywords.url_id = urls.id`, (err, rows) => {
+    db.all(`select * from keyword_search_terms`, (err, rows) => {
       if (err) {
         reject(err.message);
       }
@@ -55,4 +55,4 @@ function getStatsData(db) {
 }
 
 
-export { startDb, end, getVisitData, getDownloadsData, getStatsData };
+export { startDb, end, getVisitData, getDownloadsData, getKeywordsData };
