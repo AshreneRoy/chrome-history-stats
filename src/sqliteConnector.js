@@ -24,7 +24,28 @@ function end(db) {
 
 function getVisitData(db) {
   return new Promise((resolve, reject) => {
-    db.all(`select visits.id,urls.url,visits.from_visit from visits inner join urls on visits.url = urls.id`, (err, rows) => {
+    db.all(`select visits.id,urls.url,visits.from_visit,visit_time, visit_duration, visit_count from visits inner join urls on visits.url = urls.id`, (err, rows) => {
+      if (err) {
+        reject(err.message);
+      }
+      resolve(rows);
+    });
+  });
+}
+
+function getDownloadsData(db) {
+  return new Promise((resolve, reject) => {
+    db.all(`select current_path, total_bytes, tab_url from downloads`, (err, rows) => {
+      if (err) {
+        reject(err.message);
+      }
+      resolve(rows);
+    });
+  });
+}
+function getStatsData(db) {
+  return new Promise((resolve, reject) => {
+    db.all(`select * from keyword_search_terms inner join urls on keywords.url_id = urls.id`, (err, rows) => {
       if (err) {
         reject(err.message);
       }
@@ -34,4 +55,4 @@ function getVisitData(db) {
 }
 
 
-export { startDb, end, getVisitData };
+export { startDb, end, getVisitData, getDownloadsData, getStatsData };

@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "chrome-history-tree": "node src/main.js"
+    "chrome-history-tree": "node src/historyTree.js",
+    "chrome-downloads": "node src/downloads.js"
   },
   "author": "",
   "license": "ISC",
