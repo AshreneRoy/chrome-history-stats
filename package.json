@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "chrome-history-tree": "node src/historyTree.js",
     "chrome-downloads": "node src/downloads.js",
-    "stats": "node src/stats.js"
+    "chrome-stats": "node src/stats.js"
   },
   "author": "",
   "license": "ISC",

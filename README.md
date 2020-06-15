@@ -3,7 +3,9 @@
 
 ### Node version
 **`12.18.0`**
-### Command
-**`npm run chrome-history-tree`**
+### Commands
+To view history tree: **`npm run chrome-history-tree`**
+To get downloads data: **`npm run chrome-downloads`**
+To get some usage stats: **`npm run chrome-stats`**
 ### To save to a text file
 **`npm run chrome-history-tree > tree.txt`**
