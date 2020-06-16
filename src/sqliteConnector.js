@@ -33,6 +33,17 @@ function getVisitData(db) {
   });
 }
 
+function getVisitDataForUrl(db, url) {
+  return new Promise((resolve, reject) => {
+    db.all(`select visits.id,urls.url,visits.from_visit,visit_time, visit_duration, visit_count from visits inner join urls on visits.url = urls.id where urls.url like '%`+url+`%';`, (err, rows) => {
+      if (err) {
+        reject(err.message);
+      }
+      resolve(rows);
+    });
+  });
+}
+
 function getUrlData(db) {
   return new Promise((resolve, reject) => {
     db.all(`select url, visit_count from urls order by visit_count desc;`, (err, rows) => {
@@ -65,5 +76,27 @@ function getKeywordsData(db) {
   });
 }
 
+function getKeywordData(db, keyword) {
+  return new Promise((resolve, reject) => {
+    db.all(`select * from keyword_search_terms inner join visits on keyword_search_terms.url_id = visits.url where term like '%`+keyword+`%';`, (err, rows) => {
+      if (err) {
+        reject(err.message);
+      }
+      resolve(rows);
+    });
+  });
+}
 
-export { startDb, end, getVisitData, getDownloadsData, getKeywordsData, getUrlData };
+function getStatForToday(db, time) {
+  return new Promise((resolve, reject) => {
+    db.all(`select urls.url,visit_time, visit_duration from visits inner join urls on visits.url = urls.id where visit_time >= ` + time, (err, rows) => {
+      if (err) {
+        reject(err.message);
+      }
+      resolve(rows);
+    });
+  });
+}
+
+
+export { startDb, end, getVisitData, getDownloadsData, getKeywordsData, getKeywordData, getUrlData, getStatForToday, getVisitDataForUrl };
