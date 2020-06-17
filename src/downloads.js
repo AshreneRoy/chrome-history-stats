@@ -1,12 +1,15 @@
-import { startDb, end, getDownloadsData } from './sqliteConnector.js';
-import { copyHistory } from './copyHistory.js';
+import { AppDAO } from './dao/AppDAO.js';
+import { DownloadRepository } from './repository/DownloadRepository.js';
+import * as fileUtils from './utils/file.util.js';
 
-export async function main() {
-
-  let path = await copyHistory();
-  let db = await startDb(path);
-  let downloads = await getDownloadsData(db);
-  await end(db);
+const getAllDownloads =  async () => {
+  const dao = new AppDAO(await fileUtils.copyDBFile());
+  const downloadRepository = new DownloadRepository(dao);
+  let downloads = await downloadRepository.getAll();
+  await dao.end();
   return downloads;
 }
-main().then(console.table);
+
+getAllDownloads().then(console.table);
+
+export { getAllDownloads };

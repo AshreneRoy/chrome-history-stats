@@ -1,36 +1,37 @@
-import { startDb, end, getVisitData } from './sqliteConnector.js';
-import { massageData } from './massageData.js';
-import { copyHistory } from './copyHistory.js';
 import treeify from 'treeify';
+import { AppDAO } from './dao/AppDAO.js';
+import { VisitRepository } from './repository/VisitRepository.js';
+import * as fileUtils from './utils/file.util.js';
+import * as dataUtils from './utils/data.util.js';
 
-export async function main() {
+const getHistoryTree = async () => {
 
-  let path = await copyHistory();
-  let db = await startDb(path);
-  let allVisits = await getVisitData(db);
-  await end(db);
+  const dao = new AppDAO(await fileUtils.copyDBFile());
+  const visitRepository = new VisitRepository(dao);
+  let allVisits = await visitRepository.getAllVisitAndUrl();
+  await dao.end();
   let uniqueVisits = {};
 
   allVisits.forEach(ele => {
-    let element = massageData(ele);
-    let node;
+    let element = dataUtils.massageData(ele);
     if(uniqueVisits[element.id] == null) {
-      node = {
+      uniqueVisits[element.id] = {
         [element.id]: [],
         [element.url]: ''
-      }
-      uniqueVisits[element.id] = node;
+      };
     }
     if(uniqueVisits[element.fromVisit] == null) {
-      node = {
+      uniqueVisits[element.fromVisit] = {
         [element.fromVisit]: [],
         [element.url]: ''
       }
-      uniqueVisits[element.fromVisit] = node;
     }
     uniqueVisits[element.fromVisit][element.fromVisit].push(uniqueVisits[element.id]);
     
   });
-  return treeify.asTree(uniqueVisits[0]);
+  return uniqueVisits;
 }
-main().then(console.log);
+
+getHistoryTree().then((result) => console.log(treeify.asTree(result[0])));
+
+export { getHistoryTree }

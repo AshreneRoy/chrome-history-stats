@@ -7,9 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "chrome-history-tree": "node src/historyTree.js",
     "chrome-downloads": "node src/downloads.js",
-    "chrome-stats": "node src/stats.js"
+    "chrome-stats": "node src/stats.js",
+    "chrome-keyword-session": "node src/searchSession.js"
   },
-  "author": "",
+  "author": "Ashrene Roy",
   "license": "ISC",
   "type": "module",
   "dependencies": {

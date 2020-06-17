@@ -1,6 +1,11 @@
-import { startDb, end, getDownloadsData, getKeywordsData, getVisitDataForUrl, getUrlData, getStatForToday } from './sqliteConnector.js';
-import { copyHistory } from './copyHistory.js';
-import { convertToReadableTime, convertToReadableDate } from './massageData.js';
+import { AppDAO } from './dao/AppDAO.js';
+import { KeywordRepository } from './repository/KeywordRepository.js';
+import { VisitRepository } from './repository/VisitRepository.js';
+import { DownloadRepository } from './repository/DownloadRepository.js';
+import { UrlRepository } from './repository/UrlRepository.js';
+import * as dateUtils from './utils/date.util.js';
+import * as dataUtils from './utils/data.util.js';
+import * as fileUtils from './utils/file.util.js';
 
 export async function main() {
 
@@ -13,38 +18,39 @@ export async function main() {
   // [*] total downloads size
   // [*] Keyword search session
 
-  let path = await copyHistory();
-  let db = await startDb(path);
-  let downloads = await getDownloadsData(db);
-  let urls = await getUrlData(db);
-  let visits = await getVisitDataForUrl(db, urls[0].url);
+  const dao = new AppDAO(await fileUtils.copyDBFile());
+  const keywordRepository = new KeywordRepository(dao);
+  const downloadRepository = new DownloadRepository(dao);
+  const visitRepository = new VisitRepository(dao);
+  const urlRepository = new UrlRepository(dao);
 
-  let today = new Date();
-  let dd = String(today.getDate()).padStart(2, '0');
-  let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-  let yyyy = today.getFullYear();
+  let downloads = await downloadRepository.getAll();
+  let urls = await urlRepository.getAll();
+  let visits = await visitRepository.getAllVisitLikeUrl(urls[0].url);
+  let keywords = await keywordRepository.getAllKeywordsAndUrls();
+  let today = dateUtils.formatDateFromUnixTimestamp(new Date());
+  let todayStat = await visitRepository.getAllVisitAndUrlGreaterThanVisitTime(
+      dateUtils.convertUnixToWekitTimestamp(today)
+    );
+  await dao.end();
 
-  today = mm + '-' + dd + '-' + yyyy;
-  let todayStat = await getStatForToday(db, (new Date('1601-01-01').getTime()*(-1)+new Date(today).getTime())*1000)
-  let keywords = await getKeywordsData(db);
-  await end(db);
-  let cleanTodayStats = todayStat.map((ele) => convertToReadableTime(ele));
+  let cleanTodayStats = todayStat.map((ele) => dataUtils.convertToReadableTime(ele));
   let uniqueKeywords = {};
   keywords.forEach(element => {
     if(uniqueKeywords[element.term] == null)
       uniqueKeywords[element.term] = 0;
     uniqueKeywords[element.term] = uniqueKeywords[element.term] + element.visit_count;
   });
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+  
 
   let totalDownloadsSize = downloads.reduce((acc, currV) => {
     return acc + currV.total_bytes;
   }, 0);
-  const i = Math.floor(Math.log(totalDownloadsSize) / Math.log(1024));
+  
 
   let visitsByDay = {};
   visits.forEach((ele) => {
-    let a = convertToReadableDate(ele);
+    let a = dataUtils.convertToReadableDate(ele);
     if (visitsByDay[a.visit_time] == null)
       visitsByDay[a.visit_time] = 0;
     visitsByDay[a.visit_time] = "=".repeat(visitsByDay[a.visit_time].length+1);
@@ -63,7 +69,7 @@ export async function main() {
   console.log("\n10 largest files downloaded\n")
   console.table(downloads.slice(0,10));
   console.log("\nTotal downloads size\n")
-  console.log(parseFloat((totalDownloadsSize / Math.pow(1024, i))).toFixed(2)+ ' ' + sizes[i]);
+  console.log(dataUtils.convertBytesToNearestMemoryUnit(totalDownloadsSize));
 
 }
 
