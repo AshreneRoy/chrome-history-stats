@@ -7,6 +7,6 @@
 To view history tree: **`npm run chrome-history-tree`**\
 To get downloads data: **`npm run chrome-downloads`**\
 To get some usage stats: **`npm run chrome-stats`**\
-To get all sessions for a keyword: **`npm run chrome-keyword-session <keyword>`**\
+To get all sessions for a keyword: **`npm run chrome-keyword-session <keyword>`**
 ### To save to a text file
 **`npm run chrome-history-tree > tree.txt`**

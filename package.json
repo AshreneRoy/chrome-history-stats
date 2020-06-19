@@ -1,7 +1,7 @@
 {
   "name": "chrome-history-tree",
   "version": "1.0.0",
-  "description": "",
+  "description": "Get chrome usage stats",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -10,12 +10,16 @@
     "chrome-stats": "node src/stats.js",
     "chrome-keyword-session": "node src/searchSession.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AshreneRoy/chrome-history-tree"
+  },
   "author": "Ashrene Roy",
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "async": "^3.2.0",
     "sqlite3": "^4.2.0",
     "treeify": "^1.1.0"
-  }
+  },
+  "homepage": "https://github.com/AshreneRoy/chrome-history-tree"
 }
