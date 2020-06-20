@@ -5,10 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "chrome-history-tree": "node src/historyTree.js",
-    "chrome-downloads": "node src/downloads.js",
-    "chrome-stats": "node src/stats.js",
-    "chrome-keyword-session": "node src/searchSession.js"
+    "lint": "eslint ./lib",
+    "lint:fix": "eslint ./lib --fix",
+    "chrome-history-tree": "node lib/history-tree.js",
+    "chrome-downloads": "node lib/downloads.js",
+    "chrome-stats": "node lib/stats.js",
+    "chrome-keyword-session": "node lib/search-session.js"
   },
   "repository": {
     "type": "git",
@@ -21,5 +23,10 @@
     "sqlite3": "^4.2.0",
     "treeify": "^1.1.0"
   },
-  "homepage": "https://github.com/AshreneRoy/chrome-history-tree"
+  "homepage": "https://github.com/AshreneRoy/chrome-history-tree",
+  "devDependencies": {
+    "eslint": "^7.3.1",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.21.2"
+  }
 }
