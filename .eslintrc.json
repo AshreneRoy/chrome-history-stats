@@ -12,6 +12,12 @@
     },
     "rules": {
         "no-console": "off",
-        "import/prefer-default-export": "off"
+        "import/prefer-default-export": "off",
+        "import/extentions": [
+            "always",
+            {
+                "js": "always"
+            }
+        ]
     }
 }
