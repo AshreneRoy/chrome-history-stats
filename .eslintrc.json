@@ -13,8 +13,8 @@
     "rules": {
         "no-console": "off",
         "import/prefer-default-export": "off",
-        "import/extentions": [
-            "always",
+        "import/extensions": [
+            "error",
             {
                 "js": "always"
             }
